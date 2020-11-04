@@ -58,6 +58,31 @@ int send_command_cobs(float value1, float value2, int send_port)
     return 0;
 }
 
+int send_command_button_cobs(char sent_button, int send_port)
+{
+    char val_to_send[9];
+    char val_cobs_to_send[11];
+    memset(val_cobs_to_send, 0, 11);
+    float value_button_1 = 0;                         // insert info to send with button
+    float value_button_2 = 0;                         // insert info to send with button
+
+    switch (sent_button)
+    {
+        case BUTTON_A: {val_to_send[0] = 'A'; break;}
+        case BUTTON_B: {val_to_send[0] = 'B'; break;}
+        case BUTTON_X: {val_to_send[0] = 'X'; break;}
+        case BUTTON_Y: {val_to_send[0] = 'Y'; break;}
+        default: break;
+    }
+    memcpy(val_to_send + sizeof(char), &value_button_1, sizeof(float));
+    memcpy(val_to_send + sizeof(char) + sizeof(float), &value_button_2, sizeof(float));
+
+    cobs_encode((uint8_t *)val_to_send, sizeof(val_to_send), (uint8_t *)val_cobs_to_send);
+    clearPort(send_port);
+    write(send_port, val_cobs_to_send, 11);
+    return 0;
+}
+
 int  send_axis_updates(int *old_axis_array, int *new_axis_array, int send_port)
 {
 	int i;
@@ -104,7 +129,8 @@ int update_button(int button, int button_state, int send_port, int receive_port)
 	unsigned char flag = 0;
 	char value = 0;
 	char buffer[512] = "";
-
+	if (button_state == 1)
+    send_command_button_cobs(button, send_port);
 	switch(button)
 	{
 		case BUTTON_LEFT_BUMPER:
@@ -250,7 +276,7 @@ int update_axis(int axis, int axis_value, int send_port)
 int main(int argc, char *argv[])
 {
 	int  joy_file, received, send_port, receive_port; // file IDs for the joy, in serial, and out serial ports
-	char joy_address[32] = "/dev/input/js0";
+	char joy_address[32] = "/dev/input/js1";
     char buffer[512] = "";
 	int  old_axis_values[8] = {0};     // intialize all buttons to "off" (0) this array is check edagainst for button updates and if an update is found the update is sent. Axis stuff is the same
 	int  old_button_values[11] = {0};  // array as mentioned above     
