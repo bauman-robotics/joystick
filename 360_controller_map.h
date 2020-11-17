@@ -12,9 +12,9 @@
 
 // "Axis" definitions. Down (trigger pulled in, stick 
 // down) and right are positive values
-#define AXIS_LEFT_STICK_VERTICAL    1
-#define AXIS_LEFT_STICK_HORIZONTAL  0
-#define AXIS_RIGHT_STICK_VERTICAL   2 // rpi // 2 pc
+#define AXIS_LEFT_STICK_VERTICAL    1//7
+#define AXIS_LEFT_STICK_HORIZONTAL  0//6
+#define AXIS_RIGHT_STICK_VERTICAL   4//4 // rpi // 2 pc
 #define AXIS_RIGHT_STICK_HORIZONTAL 3 //3
 
 #define AXIS_LEFT_TRIGGER           2
@@ -38,5 +38,6 @@
 #define BUTTON_COUNT        11
 
 #define DEADZONE            0.1f
+
 
 #endif
